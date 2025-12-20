@@ -1,1 +1,9 @@
-
+{
+  "last_sync": "2025-01-01T00:00:00Z",
+  "sync_source": "manual",
+  "files": {
+    "trades": 0,
+    "signals": 0,
+    "orders": 0
+  }
+}
