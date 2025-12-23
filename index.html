@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🤖 ADAUSD Trading Dashboard</title>
-    <h1>🤖 ADAUSD Trading Dashboard</h1>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
@@ -145,10 +144,17 @@
             cursor: pointer;
             display: block;
             margin: 20px auto;
+            transition: all 0.3s;
         }
         .refresh-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+        }
+        .last-update {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -231,8 +237,8 @@
     </div>
 
     <script>
-        // ✅ AUTO-DETECTA EL REPO
-        const BASE_URL = 'https://raw.githubusercontent.com/winningtrendingbots/Kraken-Trading/main/';
+        // ✅ CARGA DESDE GITHUB PAGES (mismo dominio)
+        const BASE_URL = window.location.origin + '/';
         
         let charts = {};
 
@@ -243,14 +249,13 @@
 
         async function loadCSV(filename) {
             try {
-                const response = await fetch(BASE_URL + filename + '?t=' + Date.now()); // ✅ Evita caché
+                const response = await fetch(BASE_URL + filename + '?t=' + Date.now());
                 if (!response.ok) {
                     console.warn(`${filename} no encontrado o vacío`);
                     return [];
                 }
                 const text = await response.text();
                 
-                // ✅ Verificar si el CSV está vacío
                 if (text.trim().length === 0 || text.trim().split('\n').length <= 1) {
                     console.warn(`${filename} está vacío`);
                     return [];
@@ -260,7 +265,7 @@
                     Papa.parse(text, {
                         header: true,
                         dynamicTyping: true,
-                        skipEmptyLines: true, // ✅ Ignorar líneas vacías
+                        skipEmptyLines: true,
                         complete: (results) => resolve(results.data.filter(row => row.timestamp))
                     });
                 });
@@ -281,7 +286,7 @@
                 ]);
 
                 if (trades.length === 0 && signals.length === 0) {
-                    showError('No se encontraron datos. Los datos se actualizan cada hora.');
+                    showError('No se encontraron datos. Los datos se actualizan cada 5 minutos.');
                     return;
                 }
 
@@ -429,4 +434,3 @@
     </script>
 </body>
 </html>
-
