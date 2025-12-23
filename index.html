@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 ETHUSD Trading Dashboard</title>
+    <title>🤖 ADAUSD Trading Dashboard</title>
+    <h1>🤖 ADAUSD Trading Dashboard</h1>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
@@ -231,7 +232,7 @@
 
     <script>
         // ✅ AUTO-DETECTA EL REPO
-        const BASE_URL = 'https://raw.githubusercontent.com/winningtrendingbots/winningtrendingbots.github.io/main/data/';
+        const BASE_URL = 'https://raw.githubusercontent.com/winningtrendingbots/Kraken-Trading/main/';
         
         let charts = {};
 
@@ -242,13 +243,24 @@
 
         async function loadCSV(filename) {
             try {
-                const response = await fetch(BASE_URL + filename);
-                if (!response.ok) throw new Error(`No se pudo cargar ${filename}`);
+                const response = await fetch(BASE_URL + filename + '?t=' + Date.now()); // ✅ Evita caché
+                if (!response.ok) {
+                    console.warn(`${filename} no encontrado o vacío`);
+                    return [];
+                }
                 const text = await response.text();
+                
+                // ✅ Verificar si el CSV está vacío
+                if (text.trim().length === 0 || text.trim().split('\n').length <= 1) {
+                    console.warn(`${filename} está vacío`);
+                    return [];
+                }
+                
                 return new Promise((resolve) => {
                     Papa.parse(text, {
                         header: true,
                         dynamicTyping: true,
+                        skipEmptyLines: true, // ✅ Ignorar líneas vacías
                         complete: (results) => resolve(results.data.filter(row => row.timestamp))
                     });
                 });
@@ -284,13 +296,24 @@
         }
 
         function updateDashboard(trades, signals) {
-            if (trades.length > 0) {
+            if (trades.length === 0 && signals.length === 0) {
+                showError('⏳ El bot aún no ha ejecutado trades. Los primeros datos aparecerán después del primer ciclo de predicción y trading.');
+                return;
+            }
+            
+            if (trades.length === 0) {
+                document.getElementById('trades-body').innerHTML = 
+                    '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">📊 Esperando primer trade...</td></tr>';
+            } else {
                 updateTradeMetrics(trades);
                 updateEquityChart(trades);
                 updateTradesTable(trades);
             }
-
-            if (signals.length > 0) {
+        
+            if (signals.length === 0) {
+                document.getElementById('signals-body').innerHTML = 
+                    '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">🎯 Esperando primera señal...</td></tr>';
+            } else {
                 updateSignalMetrics(signals);
                 updateSignalsTable(signals);
             }
@@ -406,3 +429,4 @@
     </script>
 </body>
 </html>
+
