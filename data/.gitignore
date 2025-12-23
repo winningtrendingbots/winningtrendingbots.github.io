@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# ============================================
+# ✅ ARCHIVOS DEL MODELO - NO IGNORAR
+# ============================================
+# Permitir explícitamente archivos del modelo
+!ADAUSD_MODELS/
+!ADAUSD_MODELS/*.pth
+!ADAUSD_MODELS/*.pkl
+!ADAUSD_MODELS/*.json
+!ADAUSD_1h_data.csv
+!adausd_results.png
+!trading_analytics.png
+!LAST_TRAINING.txt
+!risk_config.json
+!prediction_tracker.csv
+
+# Ignorar OTROS archivos de Python
+# pero NO los del modelo
