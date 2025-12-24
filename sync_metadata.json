@@ -1,7 +1,7 @@
 {
-  "last_sync": "2025-12-24T18:53:18Z",
-  "source_repo": "winningtrendingbots/Kraken-Trading-ADA",
+  "last_sync": "2025-12-24T18:59:15Z",
+  "source_repo": "winningtrendingbots/Kraken-Trading",
+  "sync_type": "automated",
   "files_synced": 4,
-  "status": "active",
-  "sync_frequency": "every_5_minutes"
+  "status": "active"
 }
